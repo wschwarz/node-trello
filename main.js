@@ -65,11 +65,12 @@ trello.prototype.invokeGeneric = function(method, apiCall, args, callback) {
   if (method != 'GET') {
     req.write(post_data);
   }
-  req.end();
 
   req.on('error', function(e) {
-    throw e;
+    callback(e);
   });
+  
+  req.end();
 };
 
 trello.prototype.get = trello.prototype.api = function(apiCall, args, callback) {
