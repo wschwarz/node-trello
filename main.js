@@ -54,11 +54,10 @@ trello.prototype.get = trello.prototype.api = function(apiCall, args, callback) 
       }
     });
   });
-  req.end();
-
   req.on('error', function(e) {
-    throw e;
+    callback(e);
   });
+  req.end();
 };
 
 exports = module.exports = trello;
