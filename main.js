@@ -85,4 +85,8 @@ trello.prototype.put = function(apiCall, args, callback) {
   return this.invokeGeneric('PUT', apiCall, args, callback);
 };
 
+trello.prototype.del = function(apiCall, args, callback) {
+  return this.invokeGeneric('DELETE', apiCall, args, callback);
+};
+
 exports = module.exports = trello;
