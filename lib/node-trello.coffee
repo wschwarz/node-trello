@@ -1,47 +1,51 @@
 rest = require "restler"
 
 class Trello
+  # Creates a new Trello request wrapper.
+  # Syntax: new Trello(applicationApiKey, userToken)
   constructor: (key, token) ->
+    throw new Error "Application API key is required" unless key?
     @key = key
     @token = token
-    @host = "https://api.trello.com/"
+    @host = "https://api.trello.com"
 
-  get: (uri, args, callback) =>
-    if arguments.length is 2
-      callback = args
-      args = {}
+  # Make a GET request to Trello.
+  # Syntax: trello.get(uri, [query], callback)
+  get: () ->
+    Array.prototype.unshift.call arguments, "GET"
+    @request.apply this, arguments
 
-    @call "GET", uri, args, callback
+  # Make a POST request to Trello.
+  # Syntax: trello.post(uri, [query], callback)
+  post: () ->
+    Array.prototype.unshift.call arguments, "POST"
+    @request.apply this, arguments
 
-  post: (uri, args, callback) =>
-    if arguments.length is 2
-      callback = args
-      args = {}
+  # Make a PUT request to Trello.
+  # Syntax: trello.put(uri, [query], callback)
+  put: () ->
+    Array.prototype.unshift.call arguments, "PUT"
+    @request.apply this, arguments
 
-    @call "POST", uri, args, callback
+  # Make a DELETE request to Trello.
+  # Syntax: trello.del(uri, [query], callback)
+  del: () ->
+    Array.prototype.unshift.call arguments, "DELETE"
+    @request.apply this, arguments
 
-  put: (uri, args, callback) =>
-    if arguments.length is 2
-      callback = args
-      args = {}
+  # Make a request to Trello.
+  # Syntax: trello.request(method, uri, [query], callback)
+  request: (method, uri, argsOrCallback, callback) ->
+    if arguments.length is 3 then callback = argsOrCallback; args = {}
+    else args = argsOrCallback || {}
 
-    @call "PUT", uri, args, callback
+    options = method: method, query: @addAuthArgs args
+    url = @host + (if uri[0] is "/" then "" else "/") + uri
 
-  call: (method, uri, args, callback) =>
-    if arguments.length is 3
-      callback = args
-      args = {}
-
-    options = 
-      method: method
-      query: @addAuthArgs args
-
-    url = @host + uri
-
-    @request = rest.request url, options
-    @request.on "complete", (result) => 
-      if result instanceof Error then callback result, null
-      else callback null, result
+    request = rest.request url, options
+    request.on "success", (data, res) -> callback.call res, null, data
+    request.on "fail", (data, res) -> callback.call res, data, null
+    request.on "error", (error, res) -> callback.call res, error, null
 
   addAuthArgs: (args) ->
     args.key = @key
