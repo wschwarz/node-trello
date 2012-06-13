@@ -1,4 +1,5 @@
 rest = require "restler"
+querystring = require "querystring"
 
 class Trello
   # Creates a new Trello request wrapper.
@@ -39,7 +40,7 @@ class Trello
     if arguments.length is 3 then callback = argsOrCallback; args = {}
     else args = argsOrCallback || {}
 
-    options = method: method, query: @addAuthArgs args
+    options = method: method, query: @addAuthArgs @parseQuery uri, args
     url = @host + (if uri[0] is "/" then "" else "/") + uri
 
     request = rest.request url, options
@@ -50,6 +51,13 @@ class Trello
   addAuthArgs: (args) ->
     args.key = @key
     args.token = @token if @token
+    return args
+
+  parseQuery: (uri, args) ->
+    if uri.indexOf("?") isnt -1
+      for key, value of querystring.parse uri.split("?")[1]
+        args[key] = value
+
     return args
 
 module.exports = Trello
