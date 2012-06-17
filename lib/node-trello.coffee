@@ -40,8 +40,11 @@ class Trello
     if arguments.length is 3 then callback = argsOrCallback; args = {}
     else args = argsOrCallback || {}
 
-    options = method: method, query: @addAuthArgs @parseQuery uri, args
     url = @host + (if uri[0] is "/" then "" else "/") + uri
+    options =
+      method: method
+      parser: rest.parsers.json
+      query: @addAuthArgs @parseQuery uri, args
 
     request = rest.request url, options
     request.on "success", (data, res) -> callback.call res, null, data
