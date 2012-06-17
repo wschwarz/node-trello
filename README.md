@@ -25,4 +25,9 @@ t.get("/1/members/me", function(err, data) {
   if (err) throw err;
   console.log(data);
 });
+
+t.get("/1/members/me", { cards: "open" }, function(err, data) {
+  if (err) throw err;
+  console.log(data);
+});
 ```
