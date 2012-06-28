@@ -1,5 +1,6 @@
 rest = require "restler"
 querystring = require "querystring"
+OAuth = require "./trello-oauth"
 
 class Trello
   # Creates a new Trello request wrapper.
@@ -63,4 +64,5 @@ class Trello
 
     return args
 
+Trello.OAuth = OAuth
 module.exports = Trello
