@@ -1,4 +1,4 @@
-rest = require "restler"
+rest = require "restless"
 querystring = require "querystring"
 OAuth = require "./trello-oauth"
 
@@ -44,13 +44,10 @@ class Trello
     url = @host + (if uri[0] is "/" then "" else "/") + uri
     options =
       method: method
-      parser: rest.parsers.json
       query: @addAuthArgs @parseQuery uri, args
+      callback: callback
 
-    request = rest.request url, options
-    request.on "success", (data, res) -> callback.call res, null, data
-    request.on "fail", (data, res) -> callback.call res, data, null
-    request.on "error", (error, res) -> callback.call res, error, null
+    rest.request url, options
 
   addAuthArgs: (args) ->
     args.key = @key

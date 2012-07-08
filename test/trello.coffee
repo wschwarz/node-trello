@@ -1,4 +1,4 @@
-restler = require "restler"
+restless = require "restless"
 mocha = require "mocha"
 should = require "should"
 Trello = require "../index"
@@ -19,7 +19,7 @@ describe "Trello", () ->
 
   describe "Requests", () ->
     beforeEach () ->
-      restler.request = (url, options) =>
+      restless.request = (url, options) =>
         @request = url: url, options: options
         return new process.EventEmitter()
 
