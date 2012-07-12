@@ -45,6 +45,7 @@ class Trello
     options =
       method: method
       query: @addAuthArgs @parseQuery uri, args
+      parser: rest.parsers.json
       callback: callback
 
     rest.request url, options

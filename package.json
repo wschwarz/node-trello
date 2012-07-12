@@ -11,7 +11,7 @@
     }
   ],
   "dependencies": {
-    "restless": "0.0.2",
+    "restless": "0.0.4",
     "coffee-script": "1.3.2",
     "oauth": "0.9.7"
   },
