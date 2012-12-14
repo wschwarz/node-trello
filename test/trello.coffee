@@ -1,4 +1,4 @@
-restless = require "restless"
+request = require "request"
 mocha = require "mocha"
 should = require "should"
 Trello = require "../index"
@@ -19,8 +19,20 @@ describe "Trello", () ->
 
   describe "Requests", () ->
     beforeEach () ->
-      restless.request = (url, options) =>
-        @request = url: url, options: options
+      request.get = (options) =>
+        @request = options: options
+        return new process.EventEmitter()
+      request.post = (options) =>
+        @request = options: options
+        return new process.EventEmitter()
+      request.put = (options) =>
+        @request = options: options
+        return new process.EventEmitter()
+      request.delete = (options) =>
+        @request = options: options
+        return new process.EventEmitter()
+      request.verb = (options) =>
+        @request = options: options
         return new process.EventEmitter()
 
       @trello = new Trello("APIKEY", "USERTOKEN")
@@ -29,9 +41,9 @@ describe "Trello", () ->
       beforeEach () -> @trello.get "/test", { type: "any" }, () ->
       behavesLike.aRequest()
 
-      it "should not require query arguments", () ->
+      it "should not require json arguments", () ->
         @trello.get "/test", () ->
-        @request.options.query.should.be.ok
+        @request.options.json.should.be.ok
 
       it "should make a GET request", () ->
         @request.options.method.should.equal "GET"
@@ -40,9 +52,9 @@ describe "Trello", () ->
       beforeEach () -> @trello.post "/test", { type: "any" }, () ->
       behavesLike.aRequest()
 
-      it "should not require query arguments", () ->
+      it "should not require json arguments", () ->
         @trello.post "/test", () ->
-        @request.options.query.should.be.ok
+        @request.options.json.should.be.ok
 
       it "should make a POST request", () ->
         @request.options.method.should.equal "POST"
@@ -51,9 +63,9 @@ describe "Trello", () ->
       beforeEach () -> @trello.put "/test", { type: "any" }, () ->
       behavesLike.aRequest()
 
-      it "should not require query arguments", () ->
+      it "should not require json arguments", () ->
         @trello.post "/test", () ->
-        @request.options.query.should.be.ok
+        @request.options.json.should.be.ok
 
       it "should make a PUT request", () ->
         @request.options.method.should.equal "PUT"
@@ -62,9 +74,9 @@ describe "Trello", () ->
       beforeEach () -> @trello.del "/test", { type: "any" }, () ->
       behavesLike.aRequest()
 
-      it "should not require query arguments", () ->
+      it "should not require json arguments", () ->
         @trello.del "/test", () ->
-        @request.options.query.should.be.ok
+        @request.options.json.should.be.ok
 
       it "should make a DELETE request", () ->
         @request.options.method.should.equal "DELETE"
@@ -73,22 +85,22 @@ describe "Trello", () ->
       beforeEach () -> @trello.request "VERB", "/test", { type: "any" }, () ->
       behavesLike.aRequest()
 
-      it "should not require query arguments", () ->
+      it "should not require json arguments", () ->
         @trello.request "VERB", "/test", () ->
-        @request.options.query.should.be.ok
+        @request.options.json.should.be.ok
 
       it "should make a request with any method specified", () ->
         @request.options.method.should.equal "VERB"
 
       it "should allow uris with a leading slash", () ->
         @trello.request "VERB", "/test", () ->
-        @request.url.should.equal "https://api.trello.com/test"
+        @request.options.url.should.include "https://api.trello.com/test"
 
       it "should allow uris without a leading slash", () ->
         @trello.request "VERB", "test", () ->
-        @request.url.should.equal "https://api.trello.com/test"
+        @request.options.url.should.include "https://api.trello.com/test"
 
-      it "should parse querystring parameters from the uri", () ->
+      it "should parse jsonstring parameters from the uri", () ->
         @trello.request "VERB", "/test?name=values", () ->
-        @request.options.query.should.have.property "name"
-        @request.options.query.name.should.equal "values"
+        @request.options.json.should.have.property "name"
+        @request.options.json.name.should.equal "values"
