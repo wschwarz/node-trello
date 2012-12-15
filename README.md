@@ -1,4 +1,6 @@
 # Node wrapper for Trello’s HTTP API.
+[![Build Status](https://travis-ci.org/adunkman/node-trello.png?branch=master)](https://travis-ci.org/adunkman/node-trello)
+
 [View Trello’s API documentation online][apidocs]. For information on Trello’s API development, visit [their Trello board][trellotrello], of course.
 
 [apidocs]: https://trello.com/docs/
