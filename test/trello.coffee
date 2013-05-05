@@ -28,7 +28,7 @@ describe "Trello", () ->
       request.put = (options) =>
         @request = options: options
         return new process.EventEmitter()
-      request.delete = (options) =>
+      request.del = (options) =>
         @request = options: options
         return new process.EventEmitter()
       request.verb = (options) =>
