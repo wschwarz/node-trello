@@ -34,3 +34,7 @@ t.get("/1/members/me", { cards: "open" }, function(err, data) {
   console.log(data);
 });
 ```
+
+## License
+
+Released under [MIT](https://github.com/adunkman/node-trello/blob/master/LICENSE.md).
