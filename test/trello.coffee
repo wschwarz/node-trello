@@ -59,6 +59,9 @@ describe "Trello", () ->
       it "should make a POST request", () ->
         @request.options.method.should.equal "POST"
 
+      it "should not have query parameters", () ->
+        @request.options.url.should.not.include "?"
+
     describe "#put()", () ->
       beforeEach () -> @trello.put "/test", { type: "any" }, () ->
       behavesLike.aRequest()

@@ -42,8 +42,10 @@ class Trello
     else args = argsOrCallback || {}
 
     url = @host + (if uri[0] is "/" then "" else "/") + uri
+    if method is "GET" then url += '?' + querystring.stringify @addAuthArgs @parseQuery uri, args;
+
     options =
-      url: url + '?' + querystring.stringify @addAuthArgs @parseQuery uri, args
+      url: url
       method: method
       json: @addAuthArgs @parseQuery uri, args
 
