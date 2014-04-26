@@ -2,7 +2,7 @@
   "name": "node-trello",
   "description": "Node wrapper for Trello's HTTP API.",
   "keywords": ["http", "trello", "api", "web-service"],
-  "version": "0.1.4",
+  "version": "0.1.5",
   "author": "Luca Matteis <lmatteis@gmail.com>",
   "contributors": [
     {
