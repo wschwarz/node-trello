@@ -49,7 +49,13 @@ class Trello
       method: method
       json: @addAuthArgs @parseQuery uri, args
 
-    request[if method is 'DELETE' then 'del' else method.toLowerCase()] options, (err, response, body) => callback err, body
+    request[if method is 'DELETE' then 'del' else method.toLowerCase()] options, (err, response, body) =>
+      if response.statusCode >= 400 && !err
+        err = new Error(body)
+        err.statusCode = response.statusCode
+        err.responseBody = body
+        err.statusMessage = require('http').STATUS_CODES[response.statusCode]
+      callback err, body
 
   addAuthArgs: (args) ->
     args.key = @key
