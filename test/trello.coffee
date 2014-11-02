@@ -107,3 +107,13 @@ describe "Trello", () ->
         @trello.request "VERB", "/test?name=values", () ->
         @request.options.json.should.have.property "name"
         @request.options.json.name.should.equal "values"
+
+      it "should pass through any errors without response bodies", () ->
+        method = request.get
+        request.get = (options, callback) ->
+          callback(new Error("Something bad happened."))
+
+        @trello.request "GET", "/test", (err, response) ->
+          err.message.should.equal "Something bad happened."
+
+        request.get = method
