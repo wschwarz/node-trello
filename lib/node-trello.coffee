@@ -50,7 +50,7 @@ class Trello
       json: @addAuthArgs @parseQuery uri, args
 
     request[if method is 'DELETE' then 'del' else method.toLowerCase()] options, (err, response, body) =>
-      if response.statusCode >= 400 && !err
+      if !err && response.statusCode >= 400
         err = new Error(body)
         err.statusCode = response.statusCode
         err.responseBody = body
