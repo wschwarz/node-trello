@@ -46,8 +46,22 @@ class Trello
 
     options =
       url: url
-      method: method
-      json: @addAuthArgs @parseQuery uri, args
+      method:method
+
+
+    if args.attachment
+      options.formData = {
+        key: @key,
+        token: @token
+      }
+      if args.attachment instanceof String
+        options.formData.url = args.attachment
+      else
+        options.formData.file = args.attachment
+
+    else
+      options.json = @addAuthArgs @parseQuery uri, args
+
 
     request[if method is 'DELETE' then 'del' else method.toLowerCase()] options, (err, response, body) =>
       if !err && response.statusCode >= 400
