@@ -54,7 +54,7 @@ class Trello
         key: @key,
         token: @token
       }
-      if args.attachment instanceof String
+      if typeof args.attachment == "string" or args.attachment instanceof String
         options.formData.url = args.attachment
       else
         options.formData.file = args.attachment

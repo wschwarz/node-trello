@@ -2,6 +2,7 @@ request = require "request"
 mocha = require "mocha"
 should = require "should"
 Trello = require "../index"
+Stream = require "stream"
 
 behavesLike = require "./trello-behaviors"
 
@@ -60,7 +61,31 @@ describe "Trello", () ->
         @request.options.method.should.equal "POST"
 
       it "should not have query parameters", () ->
-        @request.options.url.should.not.include "?"
+        @request.options.url.should.not.containEql "?"
+
+    describe "#post() - image stream upload", () ->
+      beforeEach () -> @trello.post "/test", { attachment: new Stream.Readable() }, () ->
+      behavesLike.aPostBodyRequest();
+
+      it "should have an formData.file property", () ->
+        @request.options.formData.should.have.property "file"
+
+      it "should have a readable stream as formData.file property", () ->
+        # Check if a readable stream
+        # http://stackoverflow.com/a/28564000
+        @request.options.formData.file.should.be.an.instanceOf Stream.Stream
+        @request.options.formData.file._read.should.be.a.Function
+        @request.options.formData.file._readableState.should.be.an.Object
+
+    describe "#post() - image url upload", () ->
+      beforeEach () -> @trello.post "/test", { attachment: 'image.png' }, () ->
+      behavesLike.aPostBodyRequest();
+
+      it "should have an formData.url property", () ->
+        @request.options.formData.should.have.property "url"
+
+      it "should have a string as formData.url property", () ->
+        @request.options.formData.url.should.be.a.String
 
     describe "#put()", () ->
       beforeEach () -> @trello.put "/test", { type: "any" }, () ->
@@ -97,11 +122,11 @@ describe "Trello", () ->
 
       it "should allow uris with a leading slash", () ->
         @trello.request "VERB", "/test", () ->
-        @request.options.url.should.include "https://api.trello.com/test"
+        @request.options.url.should.containEql "https://api.trello.com/test"
 
       it "should allow uris without a leading slash", () ->
         @trello.request "VERB", "test", () ->
-        @request.options.url.should.include "https://api.trello.com/test"
+        @request.options.url.should.containEql "https://api.trello.com/test"
 
       it "should parse jsonstring parameters from the uri", () ->
         @trello.request "VERB", "/test?name=values", () ->
